@@ -15,4 +15,9 @@ export const styles = StyleSheet.create({
     paddingBottom: 15,
     paddingTop: 15,
   },
+  listHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  Icon: { alignSelf: "center", marginRight: 35 },
 });

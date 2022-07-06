@@ -38,6 +38,11 @@ const Draw: React.FC<DrawProps> = ({ navigation, route }) => {
           typeName: arrayTypes[draw].toUpperCase(),
         });
         arrayTypes.splice(draw, 1);
+        if (arrayTypes.length == 0)
+          response.data.results.map((a: any) => {
+            if (a.name != "unknown" && a.name != "shadow")
+              arrayTypes.push(a.name);
+          });
       });
       setDrawList(arrayDraw);
     }
@@ -51,9 +56,11 @@ const Draw: React.FC<DrawProps> = ({ navigation, route }) => {
         {drawText.screenTitle}
       </Text>
       <ScrollView>
-        {drawList.map((player, index) => {
-          return <Card key={index} data={player} />;
-        })}
+        {drawList
+          .sort((a, b) => (a.typeName > b.typeName ? 1 : -1))
+          .map((player, index) => {
+            return <Card key={index} data={player} />;
+          })}
       </ScrollView>
     </View>
   );

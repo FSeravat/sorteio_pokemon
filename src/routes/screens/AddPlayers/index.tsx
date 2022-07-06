@@ -1,9 +1,10 @@
+import { FontAwesome5 } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { FormHandles, SubmitHandler } from '@unform/core';
 import { Form } from '@unform/mobile';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, ScrollView, View } from 'react-native';
-import { Text } from 'react-native-elements';
+import { Alert, ScrollView, TouchableOpacity, View } from 'react-native';
+import { CheckBox, Text } from 'react-native-elements';
 
 import BackButton from '../../../components/Back Button';
 import Button from '../../../components/Button';
@@ -22,6 +23,11 @@ interface FormData {
 
 type playerList = {
   name: string;
+  check: boolean;
+};
+
+type selectedList = {
+  name: string;
 };
 
 const addPlayerText = appText.br.AddPlayer;
@@ -39,15 +45,38 @@ const AddPlayers: React.FC<AddPlayersProps> = () => {
       else
         arrayPlayers.push({
           name: data.name,
+          check: false,
         });
     }
     setPlayerList(arrayPlayers);
-    storage.save({ key: "players", data: arrayPlayers });
+    storage.save({
+      key: "players",
+      data: arrayPlayers.map((a) => {
+        return { name: a.name };
+      }),
+    });
     formRef.current?.clearField("name");
   };
 
   //app
   const [playerList, setPlayerList] = useState<playerList[]>([]);
+  const [selectedList, setSelectedList] = useState<selectedList[]>([]);
+  const [checkAll, setCheckAll] = useState(false);
+
+  const onCheckPress = (index: number) => {
+    const arrayPlayers = Array.from(playerList);
+    const arraySelected = Array.from(selectedList);
+    arrayPlayers[index].check = !arrayPlayers[index].check;
+    if (arrayPlayers[index].check)
+      arraySelected.push({ name: arrayPlayers[index].name });
+    else
+      arraySelected.splice(
+        arraySelected.findIndex((a) => a.name === arrayPlayers[index].name),
+        1
+      );
+    setSelectedList(arraySelected);
+    setPlayerList(arrayPlayers);
+  };
 
   const handleDelete = (index: number) => {
     try {
@@ -65,7 +94,36 @@ const AddPlayers: React.FC<AddPlayersProps> = () => {
               const arrayPlayers = Array.from(playerList);
               arrayPlayers.splice(index, 1);
               setPlayerList(arrayPlayers);
-              storage.save({ key: "players", data: arrayPlayers });
+              storage.save({
+                key: "players",
+                data: arrayPlayers.map((a) => {
+                  return { name: a.name };
+                }),
+              });
+            },
+          },
+        ]
+      );
+    } catch (error) {
+      Alert.alert(addPlayerText.alert.removePlayer.error);
+    }
+  };
+
+  const massDelete = () => {
+    try {
+      Alert.alert(
+        addPlayerText.alert.massRemove.title,
+        addPlayerText.alert.massRemove.description,
+        [
+          {
+            text: addPlayerText.alert.massRemove.negate,
+            style: "cancel",
+          },
+          {
+            text: addPlayerText.alert.massRemove.confirm,
+            onPress: () => {
+              setPlayerList([]);
+              storage.remove({ key: "players" });
             },
           },
         ]
@@ -78,12 +136,15 @@ const AddPlayers: React.FC<AddPlayersProps> = () => {
   useEffect(() => {
     async function loadPlayers() {
       storage.load({ key: "players" }).then((ret) => {
-        setPlayerList(ret);
+        setPlayerList(
+          ret.map((a: any) => {
+            return { name: a.name, check: false };
+          })
+        );
       });
     }
     loadPlayers();
   }, []);
-
   return (
     <View style={styles.container}>
       <BackButton />
@@ -97,14 +158,43 @@ const AddPlayers: React.FC<AddPlayersProps> = () => {
           onPress={() => formRef.current?.submitForm()}
         />
       </Form>
+      <View style={styles.listHeader}>
+        <CheckBox
+          size={16}
+          containerStyle={{ marginLeft: 40 }}
+          checked={checkAll}
+          onPress={() => {
+            var arr = Array.from(playerList);
+            arr.map((a) => {
+              a.check = !checkAll;
+            });
+            setPlayerList(arr);
+            if (!checkAll)
+              setSelectedList(
+                arr.map((a) => {
+                  return { name: a.name };
+                })
+              );
+            else setSelectedList([]);
+            setCheckAll(!checkAll);
+          }}
+        />
+        {checkAll && (
+          <TouchableOpacity onPress={massDelete} style={styles.Icon}>
+            <FontAwesome5 name="trash" size={20} color="#D3455B" />
+          </TouchableOpacity>
+        )}
+      </View>
       <ScrollView>
         {playerList.map((player, index) => {
           return (
-            <Card
-              key={index}
-              data={player}
-              onDelete={() => handleDelete(index)}
-            />
+            <View key={index}>
+              <Card
+                data={player}
+                onCheck={() => onCheckPress(index)}
+                onDelete={() => handleDelete(index)}
+              />
+            </View>
           );
         })}
       </ScrollView>

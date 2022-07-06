@@ -6,7 +6,14 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
   },
+  Left: {
+    flexDirection: "row",
+  },
   PlayerName: {
+    alignSelf: "center",
     fontSize: 16,
+  },
+  Icon: {
+    alignSelf: "center",
   },
 });

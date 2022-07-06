@@ -16,6 +16,13 @@ export const appText = {
           description: "Deseja excluir o jogador?",
           error: "Não foi possível deletar o jogador.",
         },
+        massRemove: {
+          negate: "Não",
+          confirm: "Sim",
+          title: "Excluir todos os jogadores",
+          description: "Deseja excluir todos os jogadores?",
+          error: "Não foi possível deletar os jogadores.",
+        },
       },
     },
     Main: {

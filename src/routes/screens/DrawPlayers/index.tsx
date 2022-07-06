@@ -23,6 +23,7 @@ type player = {
 
 type selectedPlayer = {
   name: string;
+  check: boolean;
 };
 
 const DrawPlayers: React.FC<DrawPlayersProps> = ({ navigation }) => {
@@ -58,7 +59,6 @@ const DrawPlayers: React.FC<DrawPlayersProps> = ({ navigation }) => {
   };
 
   const selectPlayers = () => {
-    storage.save({ key: "lastDraw", data: selectedPlayers });
     setPlayerView(false);
   };
 
