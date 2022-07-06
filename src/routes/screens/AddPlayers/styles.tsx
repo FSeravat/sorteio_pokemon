@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     padding: 25,
   },
   title: {
-    alignSelf: "center",
+    alignSelf: "flex-start",
     color: "#283744",
     paddingBottom: 15,
     paddingTop: 15,

@@ -8,7 +8,6 @@ import { styles } from './styles';
 type CardProps = {
   data?: Data;
   onDelete?: () => void;
-  onEdit?: () => void;
 };
 
 type Data = {

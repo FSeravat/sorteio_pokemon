@@ -1,12 +1,37 @@
 export const appText = {
   br: {
-    Main: {
+    AddPlayer: {
       inputName: "Nome do jogador",
       addButton: "Adicionar",
-      drawButton: "Sortear",
       screenTitle: "Adicionar novo jogador",
       alert: {
-        addPlayer: "Não foi é possível adionar mais jogadores.",
+        addPlayer: {
+          sameName: "Não é possível adicionar jogadores com mesmo nome.",
+          emptyField: "Por favor, digite um nome.",
+        },
+        removePlayer: {
+          negate: "Não",
+          confirm: "Sim",
+          title: "Excluir jogador",
+          description: "Deseja excluir o jogador?",
+          error: "Não foi possível deletar o jogador.",
+        },
+      },
+    },
+    Main: {
+      screenTitle: "Menu",
+      buttons: {
+        navigateAddPlayer: "Jogadores",
+        navigateDrawPlayer: "Sortear",
+      },
+    },
+    DrawPlayers: {
+      screenTitle: "Sortear jogadores",
+      buttons: {
+        addPlayer: "Adicionar jogadores",
+        draw: "Sortear jogadores",
+      },
+      alert: {
         removePlayer: {
           negate: "Não",
           confirm: "Sim",
