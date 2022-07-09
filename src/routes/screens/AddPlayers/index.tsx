@@ -1,10 +1,9 @@
-import { FontAwesome5 } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { FormHandles, SubmitHandler } from '@unform/core';
 import { Form } from '@unform/mobile';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, ScrollView, TouchableOpacity, View } from 'react-native';
-import { CheckBox, Text } from 'react-native-elements';
+import { Alert, ScrollView, View } from 'react-native';
+import { Text } from 'react-native-elements';
 
 import BackButton from '../../../components/Back Button';
 import Button from '../../../components/Button';
@@ -148,9 +147,11 @@ const AddPlayers: React.FC<AddPlayersProps> = () => {
   return (
     <View style={styles.container}>
       <BackButton />
+
       <Text style={styles.title} h4>
         {addPlayerText.screenTitle}
       </Text>
+
       <Form ref={formRef} onSubmit={handleSubmit}>
         <Input name="name" label={addPlayerText.inputName}></Input>
         <Button
@@ -158,42 +159,11 @@ const AddPlayers: React.FC<AddPlayersProps> = () => {
           onPress={() => formRef.current?.submitForm()}
         />
       </Form>
-      <View style={styles.listHeader}>
-        <CheckBox
-          size={16}
-          containerStyle={{ marginLeft: 40 }}
-          checked={checkAll}
-          onPress={() => {
-            var arr = Array.from(playerList);
-            arr.map((a) => {
-              a.check = !checkAll;
-            });
-            setPlayerList(arr);
-            if (!checkAll)
-              setSelectedList(
-                arr.map((a) => {
-                  return { name: a.name };
-                })
-              );
-            else setSelectedList([]);
-            setCheckAll(!checkAll);
-          }}
-        />
-        {checkAll && (
-          <TouchableOpacity onPress={massDelete} style={styles.Icon}>
-            <FontAwesome5 name="trash" size={20} color="#D3455B" />
-          </TouchableOpacity>
-        )}
-      </View>
       <ScrollView>
         {playerList.map((player, index) => {
           return (
             <View key={index}>
-              <Card
-                data={player}
-                onCheck={() => onCheckPress(index)}
-                onDelete={() => handleDelete(index)}
-              />
+              <Card data={player} onDelete={() => handleDelete(index)} />
             </View>
           );
         })}
